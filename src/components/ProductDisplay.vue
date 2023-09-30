@@ -1,39 +1,56 @@
 <template>
   <div class="container">
-    <div class="container-products">
-      <div>
-
-      </div>
-      <div>
-        <h1>Name of Product</h1>
-        <div>
-          <p>Category</p>
-          <p>Rates</p>
+    <div v-if="isLoading">
+      <!-- Show a loading indicator -->
+      <div class="loader"></div>
+    </div>
+    
+    <div v-else class="container" :class="!isProductAvailable ? 'back-gray' : currentProduct.category == 'men\'s clothing' ? 'back-blue' : 'back-pink'">
+        <!-- Show product details when not loading -->
+        <div class="temp">
+          <div v-if="!isProductAvailable" class="container-product-unavailable">
+          <div class="product-details">
+              <p>This product is unavailable to show</p>
+              <div class="footer">
+                <button type="button" @click="fetchNextProduct" class="button-next">Next Product</button>
+              </div>
+            </div>
         </div>
-        <div>
-          <p>Products's Details</p>
-          <p>Price</p>
-        </div>
 
-        <div>
-          <button>Buy</button>
-          <button @click="fetchNextProduct">Next Product</button>
-          <div v-if="isLoading">
-            <!-- Show a loading indicator -->
-            <div class="loader"></div>
+        <div v-else class="container-products">
+              <div class="product-image">
+                <img src= currentProduct.image alt="">
+              </div>
+
+                <div class="product-details">
+                <div class="upper">
+                    <h1 :class="currentProduct.category === 'men\'s clothing' ? 'blue-font' : 'pink-font'" class="product-title">{{ currentProduct ? currentProduct.title : '' }}</h1>
+                  <div class="product-element">
+                    <p>Category: {{ currentProduct ? currentProduct.category : '' }}</p>
+                    <p>Rating : {{ currentProduct ? currentProduct.rating.rate : '' }}</p>
+                  </div>
+                  <div>
+                    <div class="product-info">
+                          <p>{{ currentProduct ? currentProduct.description : '' }}</p>
+                        </div>
+                    <p>Price : {{ currentProduct ? currentProduct.price : '' }} $</p>
+                  </div>
+                </div>
+
+              <div class="footer">
+                <button type="button" :class="currentProduct.category === 'men\'s clothing' ? 'bg-navy' : 'bg-magenta'"
+                          class="button-buy">Buy Now</button>
+                <button type="button" @click="fetchNextProduct()"
+                          :class="currentProduct.category === 'men\'s clothing' ? 'border-navy font-navy' : 'border-magenta font-magenta'"
+                          class="button-next">Next Product</button>
+              </div>
+
           </div>
-          <div v-else>
-            <!-- Show product details when not loading -->
-            <h2>{{ currentProduct ? currentProduct.title : '' }}</h2>
-            <p>{{ currentProduct ? currentProduct.description : '' }}</p>
-            <p>Category: {{ currentProduct ? currentProduct.category : '' }}</p>
-          </div>
         </div>
-
+        </div>
+      
       </div>
     </div>
-  </div>
-
 </template>
 
 <script>
@@ -42,13 +59,13 @@ export default {
   data() {
     return {
       currentIndex: 0, // Index awal
-      isProductAvailable : false,
+      isProductAvailable: false,
       isLoading: false,
-      product: {}
+      currentProduct: {}
     };
   },
   methods: {
-    async callProductApi(){
+    async callProductApi() {
       // Panggil API dengan menggunakan index saat ini
       const response = await fetch(`https://fakestoreapi.com/products/${this.currentIndex}`);
       const data = await response.json();
@@ -76,12 +93,12 @@ export default {
       this.isLoading = false;
     }
   },
-  mounted(){
+  mounted() {
     this.fetchNextProduct();
   }
 };
 </script>
 
 <style scoped>
-  @import '../assets/page.css'
+@import '../assets/page.css'
 </style>
