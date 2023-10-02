@@ -9,6 +9,7 @@
   --white: #FFFFFF;
 }
 
+/* box-sizing : property allows us to include the padding and border in an element's total width and height. */
 * {
   margin: 0;
   box-sizing: border-box;

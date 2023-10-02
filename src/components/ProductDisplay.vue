@@ -19,7 +19,7 @@
 
         <div v-else class="container-products">
               <div class="product-image">
-                <img src= currentProduct.image alt="">
+                <img :src= "currentProduct.image" alt="">
               </div>
 
                 <div class="product-details">
